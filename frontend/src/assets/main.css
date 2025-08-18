@@ -1,4 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* YOUR existing CSS (unchanged) below */
+
 
 /* gobal stylesheet */
 /* Make root fill the viewport */
@@ -24,7 +30,13 @@ body {
 }
 
 
-
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0);
+  white-space: nowrap; border: 0;
+}
 
 
 
@@ -76,9 +88,4 @@ body {
   margin-right: -50vw;
   width: 100vw;
 }
-
-.bg-site {
-  background-color: #15f9fc; /* light bluish background */
-}
-
 

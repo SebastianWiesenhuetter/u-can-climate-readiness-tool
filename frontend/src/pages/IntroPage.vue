@@ -3,10 +3,15 @@ import { onMounted, ref } from "vue";
 import { getMeta, getCategories } from "@/api/questionnaire";
 import { useSurvey } from "@/stores/useSurvey";
 import { ensureSession } from "@/api/questionnaire";
+import { useRoute, useRouter } from "vue-router";
+
 
 const meta = ref<{title?:string|null;subtitle?:string|null}>({});
 const cats = ref<{category_id:number;category_name:string;question_count:number}[]>([]);
 const survey = useSurvey();
+
+const route = useRoute();
+const router = useRouter();
 
 onMounted(async () => {
   survey.initSession();
@@ -15,9 +20,17 @@ onMounted(async () => {
   cats.value = await getCategories();
   survey.setCategories(cats.value.map(c => c.category_id));
 });
+// function start() {
+//   // navigate to first category
+//   window.location.href = `/category/${survey.currentCategoryId()}`;
+// }
 function start() {
-  // navigate to first category
-  window.location.href = `/category/${survey.currentCategoryId()}`;
+  const firstCat = survey.currentCategoryId();
+  if (!firstCat) { alert("No categories found."); return; }
+  // go to first question (qi=0) of the first category
+  //window.location.href = `/survey/${firstCat}/0`;
+  router.push(`/survey/${firstCat}/0`)
+
 }
 </script>
 

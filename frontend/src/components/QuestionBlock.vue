@@ -1,46 +1,3 @@
-<!-- <script setup lang="ts">
-import type { Question } from "@/types";
-const props = defineProps<{ question: Question; modelValue?: number }>();
-const emit = defineEmits(["update:modelValue"]);
-function update(val: number) { emit("update:modelValue", val); }
-</script> -->
-
-
-<!-- <template>
-  <div style="margin-bottom:1rem; padding-bottom:1rem; border-bottom:1px solid #e5e7eb">
-
-    <p style="font-weight:600; margin-bottom:.5rem;">
-     
-      <span v-if="question.sub_name" style="color:#475569; margin-right:.5rem;">
-        {{ question.sub_name }}
-      </span>
-      — &nbsp;{{ question.question_text }}
-    </p>
-
-    <div style="display:flex; flex-wrap:wrap; gap:.5rem; margin-bottom:.5rem;">
-      <template v-if="question.option_labels?.length">
-        <label
-          v-for="opt in question.option_labels" :key="opt.value"
-          style="display:inline-flex; align-items:center; gap:.25rem; border:1px solid #e5e7eb; padding:.25rem .5rem; border-radius:.375rem; cursor:pointer;">
-          <input type="radio" :name="`q-${question.id}`" :value="opt.value" :checked="modelValue===opt.value" @change="update(opt.value)" />
-          <span>{{ opt.value }} – {{ opt.label }}</span>
-        </label>
-      </template>
-      <template v-else>
-        <label
-          v-for="v in (question.scale_max - question.scale_min + 1)" :key="v"
-          style="display:inline-flex; align-items:center; gap:.25rem; border:1px solid #e5e7eb; padding:.25rem .5rem; border-radius:.375rem; cursor:pointer;">
-          <input type="radio" :name="`q-${question.id}`" :value="v-1" :checked="modelValue===v-1" @change="update(v-1)" />
-          <span>{{ v-1 }}</span>
-        </label>
-      </template>
-    </div> -->
-    <!-- Hide references for now -->
-    <!-- <small v-if="question.references_text" style="color:#6b7280">{{ question.references_text }}</small> -->
-  <!-- </div>
-</template> -->
-
-
 <script setup lang="ts">
 import { computed } from "vue";
 import type { Question } from "@/types";
@@ -76,7 +33,7 @@ const gridStyle = computed(() => ({
 
     <!-- row A: rectangular boxes with numbers -->
     <div :style="gridStyle" role="radiogroup" aria-label="Scale">
-      <label
+      <!-- <label
         v-for="opt in options"
         :key="opt.value"
         class="qb-box"
@@ -96,7 +53,32 @@ const gridStyle = computed(() => ({
           @change="emit('update:modelValue', opt.value)"
         />
         <span class="qb-num">{{ opt.value }}</span>
-      </label>
+      </label> -->
+      <!-- template (inside the top row of boxes) -->
+    <label
+      v-for="opt in options"
+      :key="opt.value"
+      class="qb-box"
+      :class="{ selected: modelValue === opt.value }"
+      role="radio"
+      :aria-checked="modelValue === opt.value"
+      tabindex="0"
+      @click="emit('update:modelValue', opt.value)"            
+      @keydown.enter.prevent="emit('update:modelValue', opt.value)"
+      @keydown.space.prevent="emit('update:modelValue', opt.value)"
+
+    >
+      <input
+        class="sr-only"                                       
+        type="radio"
+        :name="`q-${question.id}`"
+        :value="opt.value"
+        :checked="modelValue === opt.value"
+        @change="emit('update:modelValue', opt.value)"        
+      />
+      <span class="qb-num">{{ opt.value }}</span>
+    </label>
+
     </div>
 
     <!-- row B: labels under each box -->
@@ -141,9 +123,9 @@ const gridStyle = computed(() => ({
 .qb-label { font-size: .9rem; text-align: center; color: #334155; }
 
 /* hide native radio but keep accessible */
-.visually-hidden {
+/* .visually-hidden {
   position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none;
-}
+} */
 </style>
 
 
