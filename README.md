@@ -1,3 +1,12 @@
+
+## Installation
+
+1. DB setup
+Install mysql (if not already done)
+create dedicated DB user
+create Database
+put both db_user and db_name into the .env file
+
 ## Attribution
 
 This tool is based on a concept and design developed by **Swati Kulashri / TU Dresden** as part of the **U_CAN** project (Ukraine Towards Carbon Neutrality).

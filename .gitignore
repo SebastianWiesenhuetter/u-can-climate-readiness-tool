@@ -5,7 +5,19 @@ __pycache__/
 
 # Env
 .env
+.env.*
 
 # Node
 node_modules/
 dist/
+
+# venv backups
+backend/2025_08_07_requirements.txt
+
+# data - keep an empty -gitkeep file - so the empty folder appears in the repo
+backend/data/*
+!backend/data/.gitkeep 
+
+# public folder
+/frontend/public/u_can_background01.png
+/frontend/public/u_can_background02.png
