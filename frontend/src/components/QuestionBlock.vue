@@ -91,7 +91,8 @@ const gridStyle = computed(() => ({
 </template>
 
 <style scoped>
-.qb { margin-bottom: 1.25rem; padding-left: 2rem; padding-right: 2rem; padding-bottom: 1rem; border-bottom: 1px solid #e5e7eb; }
+/* .qb { margin-bottom: 1.25rem; padding-left: 2rem; padding-right: 2rem; padding-bottom: 1rem; border-bottom: 1px solid #e5e7eb; } */
+.qb { margin-bottom: 1.25rem; padding-left: 2rem; padding-right: 2rem; padding-bottom: 1rem;}
 .qb-title { font-weight: 600; margin-bottom: .75rem; line-height: 1.4; }
 .qb-sub { color: #475569; margin-right: .5rem; }
 .qb-text {}
@@ -110,9 +111,13 @@ const gridStyle = computed(() => ({
 .qb-box:hover { filter: brightness(0.98); }
 .qb-box:active { transform: translateY(1px); }
 .qb-box.selected {
-  background: #3679C3;                   /* U_CAN blue */
-  border-color: #3679C3;
+  /* background: #3679C3;     */
+  background: #ff0077;     
+   /* background: #555555;    */
+    /* background: rgb(255,204,0);            */
+   border-color: #3679C3; 
   color: white;
+  /* color: rgb(12, 253, 32); */
 }
 
 /* the big number inside box */

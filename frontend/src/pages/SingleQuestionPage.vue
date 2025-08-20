@@ -167,17 +167,17 @@ function prev() {
           {{ currentIndexGlobal + 1 }} / {{ totalQuestions }}
         </div>
       </div> -->
-      <div class="tw-mt-6">
-        <div class="tw-h-2 tw-bg-gray-200 tw-rounded-full tw-overflow-hidden">
-          <div
-            class="tw-h-full tw-bg-brandBlue tw-transition-[width] tw-duration-200 tw-ease-linear"
-            :style="{ width: progressPercent + '%' }"
-          />
-        </div>
-        <div class="tw-mt-2 text-normal" style="opacity:.8;">
-          {{ currentIndexGlobal + 1 }} / {{ totalQuestions }}
-        </div>
-      </div>
+
+
+      <div class="progress">
+  <div class="progress-track">
+    <div class="progress-fill" :style="{ width: progressPercent + '%' }"></div>
+  </div>
+  <div class="text-normal" style="opacity:.8; margin-top:.5rem;">
+    {{ currentIndexGlobal + 1 }} / {{ totalQuestions }}
+  </div>
+</div>
+
 
 
 

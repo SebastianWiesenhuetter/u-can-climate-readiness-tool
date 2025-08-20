@@ -3,7 +3,7 @@
 // run with tailwind
 export default {
   plugins: {
-    tailwindcss: {},
+    //tailwindcss: {},
     autoprefixer: {},
   },
 }

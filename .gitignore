@@ -21,3 +21,7 @@ backend/data/*
 # public folder
 /frontend/public/u_can_background01.png
 /frontend/public/u_can_background02.png
+/frontend/public/u_can_background03.jpg
+/frontend/public/u_can_background04.jpg
+/frontend/public/u_can_background05.png
+/frontend/public/u_can_background06.png
