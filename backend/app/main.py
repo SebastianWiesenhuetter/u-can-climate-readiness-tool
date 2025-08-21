@@ -5,6 +5,11 @@ from app.routes import questionnaire
 from app.routes import answers
 
 
+
+
+
+
+
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="U_CAN Spider API")
@@ -20,6 +25,4 @@ app.add_middleware(
 
 
 app.include_router(questionnaire.router, prefix="/api", tags=["Questionnaire"])
-
-
 app.include_router(answers.router, prefix="/api", tags=["Answers"])

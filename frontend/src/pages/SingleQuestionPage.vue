@@ -80,7 +80,13 @@ async function load() {
 }
 
 onMounted(async () => {
+  if (!survey.cityId) {
+    // no city -> send them back to intro to pick one
+    router.replace("/");
+    return;
+  }
   if (!survey.sessionId) survey.initSession();
+  await survey.ensureAndSyncSession();
   await load();
 });
 
@@ -97,7 +103,18 @@ async function next() {
   if (val === undefined) { alert("Please select an answer."); return; }
 
   // Save this single answer
-  await submitAnswer(survey.sessionId, q.value.id, val);
+  // await submitAnswer(survey.sessionId, q.value.id, val);
+  // await survey.ensureAndSyncSession();
+  try {
+    await survey.ensureAndSyncSession();
+  } catch (e:any) {
+    console.error(e);
+    alert("Couldn't prepare your session. Please try again.");
+    return;
+  }
+
+  await submitAnswer(survey.sessionId, q.value.id, val, survey.cityId);
+
 
   // Compute next question (within category), else next category’s first question, else results
   const ids = survey.categories;
@@ -138,6 +155,10 @@ function prev() {
     <div v-else-if="error" class="text-red-600">Error: {{ error }}</div>
 
     <div v-else-if="q && group">
+      <p v-if="survey.cityId" class="text-tertiary">
+        You are filling out the questionnaire for <strong>{{ survey.cityId }}</strong>
+      </p>
+
       <h2 class="text-secondary font-bold mb-4" style="margin-left: 2rem;">{{ group.category_name }}</h2>
 
       <QuestionBlock

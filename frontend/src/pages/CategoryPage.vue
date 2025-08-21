@@ -65,7 +65,9 @@ async function next() {
 
   // save this page
   const items = category.value.questions.map((q) => ({ question_id: q.id, value: survey.answers[q.id] }));
-  await submitBulk(survey.sessionId, items);
+  // await submitBulk(survey.sessionId, items);
+  await submitBulk(survey.sessionId, survey.cityId, items);
+
 
   // compute nextId from URL param + store.categories (no reliance on store index)
   const ids = survey.categories;

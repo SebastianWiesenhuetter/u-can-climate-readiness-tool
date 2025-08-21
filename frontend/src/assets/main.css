@@ -173,3 +173,49 @@ body {
   padding: 1.5rem;   
   margin-left: 2rem; 
 } */
+
+
+/* City grid layout */
+.city-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(220px, 1fr));
+  gap: 1rem 1.25rem;
+  margin-top: 0.75rem;
+  max-width: 900px; /* adjust or remove if you want wider */
+}
+
+/* City buttons */
+.city-card {
+  appearance: none;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  background: #fff;
+  color: #003399;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: box-shadow .15s ease, transform .05s ease, border-color .15s ease, background .15s ease;
+}
+.city-card:hover {
+  border-color: #3679C3;
+  box-shadow: 0 2px 10px rgba(0,0,0,.06);
+}
+.city-card:active {
+  transform: translateY(1px);
+}
+.city-card:focus {
+  outline: 3px solid rgba(54,121,195,.25);
+  outline-offset: 2px;
+}
+.city-card--active {
+  border-color: #3679C3;
+  background: #f0f6ff;
+}
+
+/* Mobile: stack */
+@media (max-width: 640px) {
+  .city-grid {
+    grid-template-columns: 1fr;
+  }
+}
