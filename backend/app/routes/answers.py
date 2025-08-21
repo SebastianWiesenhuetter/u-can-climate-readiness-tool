@@ -360,12 +360,42 @@ def radar_all_cities(db: Session = Depends(get_db)):
 
 
 ####################
+# @router.get("/sessions/{session_id}/answers", response_model=List[schemas.AnswerKV])
+# def get_session_answers(session_id: str, city_id: str | None = None, db: Session = Depends(get_db)):
+#     q = db.query(models.Answer).filter(models.Answer.session_id == session_id)
+#     if city_id:
+#         q = q.filter(models.Answer.city_id == city_id)  # you chose OPTION B (city_id on answers)
+#     rows = q.all()
+#     return [{"question_id": r.question_id, "value": r.value} for r in rows]
+###################################################
 @router.get("/sessions/{session_id}/answers", response_model=List[schemas.AnswerKV])
-def get_session_answers(session_id: str, city_id: str | None = None, db: Session = Depends(get_db)):
-    q = db.query(models.Answer).filter(models.Answer.session_id == session_id)
-    if city_id:
-        q = q.filter(models.Answer.city_id == city_id)  # you chose OPTION B (city_id on answers)
-    rows = q.all()
+def get_session_answers(
+    session_id: str,
+    city_id: str | None = None,
+    db: Session = Depends(get_db)
+):
+    # 1) Ensure session exists and read its city
+    sess = (
+        db.query(models.ResponseSession)
+          .filter(models.ResponseSession.session_id == session_id)
+          .first()
+    )
+    if not sess:
+        raise HTTPException(status_code=404, detail="Session not found")
+
+    # 2) If client provided city_id, ensure it matches the session’s city
+    #    (so consumers can detect they’re using the wrong city/session combo)
+    if city_id and sess.city_id and city_id != sess.city_id:
+        # You can also choose to return 200 + [] instead; 409 is explicit.
+        raise HTTPException(status_code=409, detail="City mismatch for this session")
+
+    # 3) Fetch answers by session only (works whether or not answers.city_id exists)
+    rows = (
+        db.query(models.Answer)
+          .filter(models.Answer.session_id == session_id)
+          .all()
+    )
     return [{"question_id": r.question_id, "value": r.value} for r in rows]
+
 
 
