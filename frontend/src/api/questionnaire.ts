@@ -123,3 +123,23 @@ export const getSessionSummary = (sessionId: string, cityId: string) =>
     series: number[][];
   }>("/analytics/radar-all-cities");
 
+
+  // export const getSessionAnswers = (sessionId: string, cityId?: string) =>
+  // http.get<{ question_id: number; value: number }[]>(
+  //   `/sessions/${sessionId}/answers${cityId ? `?city_id=${encodeURIComponent(cityId)}` : ""}`
+  // );
+
+  export const getSessionAnswers = async (sessionId: string, cityId?: string) => {
+  try {
+    return await http.get<{ question_id: number; value: number }[]>(
+      `/sessions/${sessionId}/answers${cityId ? `?city_id=${encodeURIComponent(cityId)}` : ""}`
+    );
+  } catch (e: any) {
+    // If the route doesn't exist yet (404), just treat it as no saved answers
+    if (String(e?.message || "").includes("HTTP 404")) return [];
+    throw e;
+  }
+};
+
+
+

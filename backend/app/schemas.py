@@ -156,3 +156,8 @@ class CategoryAvg(BaseModel):
 class SessionSummary(BaseModel):
     session_id: str
     per_category: List[CategoryAvg]
+
+class AnswerKV(BaseModel):
+    question_id: int
+    value: int
+

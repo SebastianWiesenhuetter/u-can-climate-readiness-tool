@@ -222,5 +222,12 @@ export const useSurvey = defineStore("survey", {
       }
     },
 
+    hydrateAnswers(pairs: { question_id: number; value: number }[]) {
+      for (const { question_id, value } of pairs) {
+        this.answers[question_id] = value;
+      }
+    }
+
+
   },
 });

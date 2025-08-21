@@ -2,7 +2,7 @@
 import { onMounted, ref, watch, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { getByCategory } from "@/api/questionnaire";
-import { submitAnswer, getCategories } from "@/api/questionnaire";
+import { submitAnswer, getCategories, getSessionAnswers } from "@/api/questionnaire";
 import { useSurvey } from "@/stores/useSurvey";
 import QuestionBlock from "@/components/QuestionBlock.vue";
 import type { GroupedCategory, Question } from "@/types";
@@ -79,16 +79,92 @@ async function load() {
   }
 }
 
+// onMounted(async () => {
+//   if (!survey.cityId) {
+//     // no city -> send them back to intro to pick one
+//     router.replace("/");
+//     return;
+//   }
+//   if (!survey.sessionId) survey.initSession();
+//   await survey.ensureAndSyncSession();
+//   await load();
+// });
+
+////////////////////////////////////////////////////////////7
+// onMounted(async () => {
+//   if (!survey.cityId) { router.replace("/"); return; }
+//   if (!survey.sessionId) survey.initSession();
+
+//   try {
+//     await survey.ensureAndSyncSession();
+
+//     // if local store is empty (or you prefer always syncing), pull saved answers
+//     if (!Object.keys(survey.answers).length) {
+//       try {
+//         const saved = await getSessionAnswers(survey.sessionId, survey.cityId);
+//         survey.hydrateAnswers(saved);
+//       }
+//       catch (e) {
+//         console.log("did not find any answers in this session");
+//       }
+      
+//     }
+//   } catch (e) {
+//     console.error(e);
+//     alert("Couldn't prepare your session. Please try again.");
+//     return;
+//   }
+
+//   await load();
+// });
+/////////////////////////////////////////////////////////////////7
+const booted = ref(false);
+
 onMounted(async () => {
-  if (!survey.cityId) {
-    // no city -> send them back to intro to pick one
-    router.replace("/");
-    return;
+  if (booted.value) return;            // avoid double-run in HMR
+  booted.value = true;
+
+  if (!survey.cityId) { 
+    router.replace("/"); 
+    return; 
   }
   if (!survey.sessionId) survey.initSession();
-  await survey.ensureAndSyncSession();
+
+  try {
+    // Make sure server has the session with the correct city
+    await survey.ensureAndSyncSession();
+
+    // Try to load saved answers. Treat a 404 route as "no saved answers".
+    let saved: { question_id:number; value:number }[] = [];
+    try {
+      saved = await getSessionAnswers(survey.sessionId, survey.cityId);
+    } catch (e: any) {
+      const msg = String(e?.message || "");
+      if (!msg.includes("HTTP 404")) throw e; // only swallow 404
+    }
+
+    // Merge server answers into local ONLY if local is empty,
+    // or you can merge missing keys to avoid overwriting local edits.
+    const hasLocal = Object.keys(survey.answers).length > 0;
+    if (saved.length) {
+      if (!hasLocal) {
+        survey.hydrateAnswers(saved);
+      } else {
+        // Merge only answers the user hasn't selected locally
+        const missing = saved.filter(a => survey.answers[a.question_id] === undefined);
+        if (missing.length) survey.hydrateAnswers(missing);
+      }
+    }
+  } catch (e) {
+    console.error(e);
+    alert("Couldn't prepare your session. Please try again.");
+    return;
+  }
+
   await load();
 });
+
+
 
 watch(() => [route.params.cid, route.params.qi], load);
 
